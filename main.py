@@ -1,32 +1,28 @@
-# Переменная для подсчёта количества вызовов
-calls = 0
+def send_email(message, recipient, sender="university.help@gmail.com"):
+    # Проверка на корректность email-адресов
+    valid_domains = [".com", ".ru", ".net"]
 
-# Функция для подсчета вызовов
-def count_calls():
-    global calls
-    calls += 1
+    def is_valid_email(email):
+        return "@" in email and any(email.endswith(domain) for domain in valid_domains)
 
-# Функция, которая принимает строку и возвращает ее характеристики
-def string_info(string):
-    count_calls()  # Увеличиваем счётчик вызовов
-    return (len(string), string.upper(), string.lower())
+    if not is_valid_email(recipient) or not is_valid_email(sender):
+        print(f"Невозможно отправить письмо с адреса {sender} на адрес {recipient}.")
+        return
 
-# Функция, проверяющая наличие строки в списке
-def is_contains(string, list_to_search):
-    count_calls()  # Увеличиваем счётчик вызовов
-    return string.lower() in (item.lower() for item in list_to_search)
+    # Проверка на отправку самому себе
+    if sender == recipient:
+        print("Нельзя отправить письмо самому себе!")
+        return
 
-# Примеры вызовов функций
-info1 = string_info("Hello World")
-info2 = string_info("Python Programming")
-contains1 = is_contains("urban", ["New York", "London", "URBAN"])
-contains2 = is_contains("Python", ["Java", "C++", "Ruby"])
+    # Проверка, является ли отправитель по умолчанию
+    if sender == "university.help@gmail.com":
+        print(f"Письмо успешно отправлено с адреса {sender} на адрес {recipient}.")
+    else:
+        print(f"НЕСТАНДАРТНЫЙ ОТПРАВИТЕЛЬ! Письмо отправлено с адреса {sender} на адрес {recipient}.")
 
-# Вывод результата работы функций
-print("('Hello World'):", info1)
-print("('Python Programming'):", info2)
-print("('urban', ['New York', 'London', 'URBAN']):", contains1)
-print("('Python', ['Java', 'C++', 'Ruby']):", contains2)
 
-# Вывод количества вызовов
-print("Количество вызовов функций:", calls)
+# Примеры вызовов функции
+send_email("Тестовое сообщение", "user@example.com")  # Успешная отправка
+send_email("Тестовое сообщение", "user@example.com", sender="custom.sender@gmail.com")  # Нестандартный отправитель
+send_email("Тестовое сообщение", "user@example")  # Некорректный e-mail
+send_email("Тестовое сообщение", "university.help@gmail.com", sender="university.help@gmail.com")  # Отсылка самому себе
