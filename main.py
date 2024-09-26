@@ -1,28 +1,23 @@
-def send_email(message, recipient, sender="university.help@gmail.com"):
-    # Проверка на корректность email-адресов
-    valid_domains = [".com", ".ru", ".net"]
+def single_root_words(root_word, *other_words):
+    # Создаем пустой список для хранения подходящих слов
+    same_words = []
 
-    def is_valid_email(email):
-        return "@" in email and any(email.endswith(domain) for domain in valid_domains)
+    # Приводим корневое слово к нижнему регистру для сравнения
+    root_word_lower = root_word.lower()
 
-    if not is_valid_email(recipient) or not is_valid_email(sender):
-        print(f"Невозможно отправить письмо с адреса {sender} на адрес {recipient}.")
-        return
+    # Перебираем все другие слова
+    for word in other_words:
+        # Приводим текущее слово к нижнему регистру
+        word_lower = word.lower()
 
-    # Проверка на отправку самому себе
-    if sender == recipient:
-        print("Нельзя отправить письмо самому себе!")
-        return
+        # Проверяем, содержится ли одно слово в другом или наоборот
+        if root_word_lower in word_lower or word_lower in root_word_lower:
+            same_words.append(word)
 
-    # Проверка, является ли отправитель по умолчанию
-    if sender == "university.help@gmail.com":
-        print(f"Письмо успешно отправлено с адреса {sender} на адрес {recipient}.")
-    else:
-        print(f"НЕСТАНДАРТНЫЙ ОТПРАВИТЕЛЬ! Письмо отправлено с адреса {sender} на адрес {recipient}.")
+    # Возвращаем список подходящих слов
+    return same_words
 
 
-# Примеры вызовов функции
-send_email("Тестовое сообщение", "user@example.com")  # Успешная отправка
-send_email("Тестовое сообщение", "user@example.com", sender="custom.sender@gmail.com")  # Нестандартный отправитель
-send_email("Тестовое сообщение", "user@example")  # Некорректный e-mail
-send_email("Тестовое сообщение", "university.help@gmail.com", sender="university.help@gmail.com")  # Отсылка самому себе
+# Пример вызова функции
+result = single_root_words('Able', 'Disablement', 'Test', 'able', 'AbLe')
+print(result)  # Ожидаемый вывод: ['Disablement', 'able', 'AbLe']
