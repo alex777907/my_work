@@ -1,23 +1,17 @@
-def single_root_words(root_word, *other_words):
-    # Создаем пустой список для хранения подходящих слов
-    same_words = []
+def get_multiplied_digits(number):
+    # Преобразуем число в строку
+    str_number = str(number)
 
-    # Приводим корневое слово к нижнему регистру для сравнения
-    root_word_lower = root_word.lower()
-
-    # Перебираем все другие слова
-    for word in other_words:
-        # Приводим текущее слово к нижнему регистру
-        word_lower = word.lower()
-
-        # Проверяем, содержится ли одно слово в другом или наоборот
-        if root_word_lower in word_lower or word_lower in root_word_lower:
-            same_words.append(word)
-
-    # Возвращаем список подходящих слов
-    return same_words
+    # Если длина строки больше 1, продолжаем рекурсию
+    if len(str_number) > 1:
+        first = int(str_number[0])  # Получаем первую цифру
+        # Умножаем первую цифру на результат рекурсивного вызова для остальных цифр
+        return first * get_multiplied_digits(int(str_number[1:]))
+    else:
+        # Если длина строки равна 1, просто возвращаем первую цифру
+        return int(str_number[0])
 
 
-# Пример вызова функции
-result = single_root_words('Able', 'Disablement', 'Test', 'able', 'AbLe')
-print(result)  # Ожидаемый вывод: ['Disablement', 'able', 'AbLe']
+# Пример использования
+result = get_multiplied_digits(40203)
+print(result)
