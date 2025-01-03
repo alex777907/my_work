@@ -1,33 +1,31 @@
-import os
-import time
+def introspection_info(obj):
+    info = {}
 
-# 1. Определение целевого каталога
-# Путь к каталогу можно изменить на нужный. Текущий каталог обозначается точкой "."
-directory = "."
+    # Тип объекта
+    info['type'] = type(obj).__name__
 
-# 2. Обход каталога с помощью os.walk
-for root, dirs, files in os.walk(directory):
-    # 3. Обход каждого файла в текущем каталоге
-    for file in files:
-        # 4. Формирование полного пути к файлу
-        filepath = os.path.join(root, file)
+    # Атрибуты объекта
+    info['attributes'] = [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and not attr.startswith("__")]
 
-        try:
-            # 5. Получение времени последнего изменения файла
-            filetime = os.path.getmtime(filepath)
-            # Форматирование времени в удобочитаемый вид
-            formatted_time = time.strftime("%d.%m.%Y %H:%M", time.localtime(filetime))
+    # Методы объекта
+    info['methods'] = [method for method in dir(obj) if callable(getattr(obj, method)) and not method.startswith("__")]
 
-            # 6. Получение размера файла в байтах
-            filesize = os.path.getsize(filepath)
+    # Модуль, к которому объект принадлежит
+    info['module'] = obj.__class__.__module__
 
-            # 7. Получение родительской директории файла
-            parent_dir = os.path.dirname(filepath)
+    # Дополнительные свойства объекта (если есть)
+    info['other_properties'] = {}
 
-            # 8. Вывод информации о файле
-            print(
-                f'Обнаружен файл: {file}, Путь: {filepath}, Размер: {filesize} байт, Время изменения: {formatted_time}, Родительская директория: {parent_dir}')
+    if isinstance(obj, (int, float, complex)):
+        info['other_properties']['is_integer'] = isinstance(obj, int)
+    elif isinstance(obj, str):
+        info['other_properties']['length'] = len(obj)
+    elif isinstance(obj, (list, tuple, set, dict)):
+        info['other_properties']['length'] = len(obj)
 
-        except Exception as e:
-            # Обработка возможных ошибок, например, если файл недоступен
-            print(f'Не удалось получить информацию о файле: {filepath}. Ошибка: {e}')
+    return info
+
+
+# Пример использования
+number_info = introspection_info(42)
+print(number_info)
